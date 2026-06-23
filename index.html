@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Samoa — Moteurs Vidéo & Storytelling</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#0A0A0F; --surface:#1E1E2E; --violet:#7C3AED; --vl:#A855F7;
+      --cyan:#00F5FF; --white:#E8E6F0; --muted:#8B8BA7; --card:#16162A;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--white);font-family:'Inter',sans-serif;overflow-x:hidden;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(10,10,15,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(124,58,237,.2);}
+    .nav-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.4rem;color:var(--cyan);text-decoration:none;}
+    .nav-logo span{color:var(--vl);}
+    .nav-links{display:flex;gap:2.5rem;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;transition:color .2s;}
+    .nav-links a:hover{color:var(--cyan);}
+    .nav-cta{background:var(--violet);color:#fff!important;padding:.5rem 1.2rem;border-radius:4px;transition:background .2s!important;}
+    .nav-cta:hover{background:var(--vl)!important;}
+
+    /* HERO */
+    #hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;overflow:hidden;}
+    .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(124,58,237,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,.08) 1px,transparent 1px);background-size:60px 60px;animation:gridPulse 8s ease-in-out infinite;}
+    @keyframes gridPulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+    .scanlines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0px,transparent 3px,rgba(0,0,0,.18) 3px,rgba(0,0,0,.18) 4px);}
+    .hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.25) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:glowPulse 4s ease-in-out infinite;}
+    @keyframes glowPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.6;}50%{transform:translate(-50%,-50%) scale(1.15);opacity:1;}}
+    .hero-content{position:relative;z-index:2;max-width:860px;}
+    .hero-eyebrow{font-family:'Orbitron',monospace;font-size:.75rem;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:1.5rem;}
+    .hero-title{font-family:'Orbitron',monospace;font-size:clamp(2.5rem,7vw,5.5rem);font-weight:900;line-height:1.05;margin-bottom:1.5rem;}
+    .hero-title .line-violet{color:var(--vl);}
+    .hero-title .line-cyan{color:var(--cyan);}
+    .hero-sub{font-size:1.15rem;color:var(--muted);line-height:1.7;max-width:560px;margin:0 auto 2.5rem;}
+    .hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+    .btn-primary{background:var(--violet);color:#fff;border:none;cursor:pointer;padding:.9rem 2.2rem;border-radius:4px;font-family:'Orbitron',monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:background .2s,transform .15s;}
+    .btn-primary:hover{background:var(--vl);transform:translateY(-2px);}
+    .btn-outline{background:transparent;color:var(--cyan);border:1px solid var(--cyan);padding:.9rem 2.2rem;border-radius:4px;font-family:'Orbitron',monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:background .2s,transform .15s;}
+    .btn-outline:hover{background:rgba(0,245,255,.08);transform:translateY(-2px);}
+    .hero-stats{display:flex;gap:3rem;margin-top:4rem;justify-content:center;flex-wrap:wrap;}
+    .stat{text-align:center;}
+    .stat-num{font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;color:var(--cyan);}
+    .stat-label{font-size:.8rem;color:var(--muted);letter-spacing:.05em;margin-top:.3rem;}
+
+    /* SECTIONS */
+    section{padding:7rem 4rem;}
+    .section-header{text-align:center;margin-bottom:4rem;}
+    .section-eyebrow{font-family:'Orbitron',monospace;font-size:.7rem;letter-spacing:.3em;color:var(--vl);text-transform:uppercase;margin-bottom:1rem;}
+    .section-title{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.15;}
+    .section-sep{width:60px;height:3px;background:linear-gradient(90deg,var(--violet),var(--cyan));margin:1.2rem auto 0;border-radius:2px;}
+
+    /* SERVICES */
+    #services{background:var(--surface);}
+    .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto;}
+    .service-card{background:var(--card);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:2rem;transition:border-color .25s,transform .2s,box-shadow .2s;}
+    .service-card:hover{border-color:var(--cyan);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,245,255,.08);}
+    .service-icon{font-size:2.2rem;margin-bottom:1.2rem;display:block;}
+    .service-card h3{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;margin-bottom:.7rem;}
+    .service-card p{font-size:.9rem;color:var(--muted);line-height:1.65;}
+    .service-tag{display:inline-block;margin-top:1rem;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);border:1px solid rgba(0,245,255,.3);padding:.25rem .6rem;border-radius:3px;}
+
+    /* PROJETS */
+    #projets{background:var(--bg);}
+    .projets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;max-width:1100px;margin:0 auto;}
+    .projet-card{background:var(--card);border:1px solid rgba(124,58,237,.15);border-radius:10px;overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s;}
+    .projet-card:hover{transform:translateY(-6px);border-color:var(--vl);box-shadow:0 20px 60px rgba(124,58,237,.15);}
+    .projet-thumb{height:180px;display:flex;align-items:center;justify-content:center;font-size:4rem;background:linear-gradient(135deg,#1a0533,#3b0764);}
+    .projet-info{padding:1.5rem;}
+    .projet-cat{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--vl);margin-bottom:.5rem;}
+    .projet-info h3{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;margin-bottom:.6rem;}
+    .projet-info p{font-size:.875rem;color:var(--muted);line-height:1.6;}
+    .projet-link{display:inline-flex;align-items:center;gap:.4rem;margin-top:1rem;color:var(--cyan);font-size:.8rem;font-weight:600;text-decoration:none;transition:gap .2s;}
+    .projet-link:hover{gap:.7rem;}
+
+    /* CONTACT SECTION */
+    #contact-section{background:var(--surface);}
+    .contact-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;max-width:900px;margin:0 auto 3rem;}
+    .contact-card{background:var(--card);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:1.5rem;text-align:center;}
+    .contact-card .cc-icon{font-size:1.8rem;margin-bottom:.8rem;}
+    .contact-card .cc-label{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+    .contact-card a{color:var(--cyan);font-size:.9rem;text-decoration:none;word-break:break-all;}
+    .contact-card a:hover{text-decoration:underline;}
+    .contact-card .cc-val{color:var(--white);font-size:.9rem;}
+
+    /* COMMANDE */
+    #commande{background:var(--bg);}
+    .commande-wrapper{max-width:640px;margin:0 auto;background:var(--card);border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:3rem;}
+    .form-group{margin-bottom:1.4rem;}
+    .form-group label{display:block;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+    .form-group input,.form-group select,.form-group textarea{width:100%;background:var(--surface);border:1px solid rgba(124,58,237,.3);border-radius:5px;padding:.8rem 1rem;color:var(--white);font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--cyan);}
+    .form-group textarea{resize:vertical;min-height:110px;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .btn-submit{width:100%;padding:1rem;background:linear-gradient(135deg,var(--violet),#5b21b6);color:#fff;border:none;border-radius:5px;cursor:pointer;font-family:'Orbitron',monospace;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;transition:opacity .2s,transform .15s;margin-top:.5rem;}
+    .btn-submit:hover{opacity:.9;transform:translateY(-2px);}
+    .form-success{display:none;text-align:center;padding:2rem;color:var(--cyan);}
+    .form-success .icon{font-size:3rem;margin-bottom:1rem;}
+    .form-success h3{font-family:'Orbitron',monospace;margin-bottom:.5rem;}
+    .form-success p{color:var(--muted);}
+
+    /* MESSAGE */
+    #message-section{background:var(--surface);}
+    .message-wrapper{max-width:540px;margin:0 auto;background:var(--card);border:1px solid rgba(0,245,255,.2);border-radius:12px;padding:3rem;}
+
+    /* FOOTER */
+    footer{background:var(--surface);border-top:1px solid rgba(124,58,237,.15);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+    .footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.1rem;color:var(--cyan);}
+    .footer-logo span{color:var(--vl);}
+    .footer-copy{font-size:.8rem;color:var(--muted);}
+    .footer-admin{font-size:.75rem;color:rgba(139,139,167,.35);text-decoration:none;transition:color .2s;}
+    .footer-admin:hover{color:var(--vl);}
+    .footer-socials{display:flex;gap:1rem;}
+    .footer-socials a{color:var(--muted);font-size:.8rem;text-decoration:none;transition:color .2s;}
+    .footer-socials a:hover{color:var(--cyan);}
+
+    @media(max-width:768px){
+      nav{padding:1rem 1.5rem;}
+      .nav-links{display:none;}
+      section{padding:5rem 1.5rem;}
+      footer{padding:2rem 1.5rem;flex-direction:column;text-align:center;}
+      .form-row{grid-template-columns:1fr;}
+      .commande-wrapper,.message-wrapper{padding:2rem 1.5rem;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#hero" id="nav-logo-text">SAMOA<span>.DEV</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="#commande">Commander</a></li>
+    <li><a href="#contact-section" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="scanlines"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow" id="hero-eyebrow">// Moteur · Narration · Pixel</p>
+    <h1 class="hero-title">
+      <span class="line-violet" id="hero-line1">Je construis</span><br>
+      <span id="hero-line2">des mondes</span><br>
+      <span class="line-cyan" id="hero-line3">jouables.</span>
+    </h1>
+    <p class="hero-sub" id="hero-sub">Moteurs vidéo sur mesure, expériences narratives immersives et storytelling visuel — chaque projet est une nouvelle réalité à explorer.</p>
+    <div class="hero-actions">
+      <a href="#projets" class="btn-primary">Voir les projets</a>
+      <a href="#commande" class="btn-outline">Passer commande</a>
+    </div>
+    <div class="hero-stats" id="hero-stats"></div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header">
+    <p class="section-eyebrow">// Ce que je crée</p>
+    <h2 class="section-title">Services</h2>
+    <div class="section-sep"></div>
+  </div>
+  <div class="services-grid" id="services-grid"></div>
+</section>
+
+<!-- PROJETS -->
+<section id="projets">
+  <div class="section-header">
+    <p class="section-eyebrow">// Réalisations</p>
+    <h2 class="section-title">Projets</h2>
+    <div class="section-sep"></div>
+  </div>
+  <div class="projets-grid" id="projets-grid"></div>
+</section>
+
+<!-- CONTACT INFO -->
+<section id="contact-section">
+  <div class="section-header">
+    <p class="section-eyebrow">// Me retrouver</p>
+    <h2 class="section-title">Contacts & Réseaux</h2>
+    <div class="section-sep"></div>
+  </div>
+  <div class="contact-cards" id="contact-cards"></div>
+</section>
+
+<!-- COMMANDE -->
+<section id="commande">
+  <div class="section-header">
+    <p class="section-eyebrow">// Démarrer un projet</p>
+    <h2 class="section-title">Passer commande</h2>
+    <div class="section-sep"></div>
+  </div>
+  <div class="commande-wrapper">
+    <div id="commandeForm">
+      <div class="form-row">
+        <div class="form-group"><label>Prénom *</label><input type="text" id="cmd-prenom" placeholder="Votre prénom"/></div>
+        <div class="form-group"><label>Nom *</label><input type="text" id="cmd-nom" placeholder="Votre nom"/></div>
+      </div>
+      <div class="form-group"><label>Email *</label><input type="email" id="cmd-email" placeholder="votre@email.com"/></div>
+      <div class="form-group">
+        <label>Type de projet *</label>
+        <select id="cmd-type">
+          <option value="">— Sélectionnez —</option>
+          <option>Moteur vidéo custom</option><option>Expérience gaming</option>
+          <option>Storytelling visuel</option><option>Cinématique / Trailer</option>
+          <option>Intégration WebGL</option><option>Conseil & direction</option><option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Budget estimé</label>
+        <select id="cmd-budget">
+          <option value="">— Sélectionnez —</option>
+          <option>&lt; 1 000 €</option><option>1 000 – 5 000 €</option>
+          <option>5 000 – 15 000 €</option><option>15 000 € +</option><option>À définir ensemble</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Description du projet *</label><textarea id="cmd-desc" placeholder="Décrivez votre vision…"></textarea></div>
+      <button class="btn-submit" onclick="envoyerCommande()">⚡ Soumettre la commande</button>
+    </div>
+    <div class="form-success" id="commandeSuccess">
+      <div class="icon">✅</div>
+      <h3>Commande reçue !</h3>
+      <p>Je reviens vers vous sous 48h.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MESSAGE -->
+<section id="message-section">
+  <div class="section-header">
+    <p class="section-eyebrow">// Entrer en contact</p>
+    <h2 class="section-title">Me contacter</h2>
+    <div class="section-sep"></div>
+  </div>
+  <div class="message-wrapper">
+    <div id="contactForm">
+      <div class="form-group"><label>Nom *</label><input type="text" id="ct-nom" placeholder="Votre nom"/></div>
+      <div class="form-group"><label>Email *</label><input type="email" id="ct-email" placeholder="votre@email.com"/></div>
+      <div class="form-group"><label>Message *</label><textarea id="ct-msg" style="min-height:140px" placeholder="Votre message…"></textarea></div>
+      <button class="btn-submit" onclick="envoyerContact()">📡 Envoyer</button>
+    </div>
+    <div class="form-success" id="contactSuccess">
+      <div class="icon">📨</div>
+      <h3>Message envoyé !</h3>
+      <p>Merci ! Je vous réponds rapidement.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo" id="footer-logo">SAMOA<span>.DEV</span></div>
+  <p class="footer-copy" id="footer-copy">© 2026 Samoa — Tous droits réservés</p>
+  <div class="footer-socials" id="footer-socials"></div>
+  <a class="footer-admin" href="dashboard.html">_admin</a>
+</footer>
+
+<script>
+/* ── DEFAULTS ── */
+const DEFAULTS = {
+  hero: {
+    eyebrow:'// Moteur · Narration · Pixel',
+    line1:'Je construis', line2:'des mondes', line3:'jouables.',
+    sub:'Moteurs vidéo sur mesure, expériences narratives immersives et storytelling visuel — chaque projet est une nouvelle réalité à explorer.',
+    stats:[
+      {num:'24+', label:'Projets livrés'},
+      {num:'8', label:'Moteurs créés'},
+      {num:'100%', label:'Sur mesure'}
+    ]
+  },
+  services:[
+    {icon:'⚙️', titre:'Moteurs Vidéo Custom', desc:'Développement de moteurs de rendu et d\'animation sur mesure, optimisés pour les performances.', tag:'Engine Dev'},
+    {icon:'🎮', titre:'Expériences Gaming', desc:'Conception et développement d\'expériences interactives et jeux vidéo avec mécanique narrative.', tag:'Game Design'},
+    {icon:'📖', titre:'Storytelling Visuel', desc:'Narration transmedia — scénarios, visuels cinématiques et direction artistique.', tag:'Narrative'},
+    {icon:'🎬', titre:'Cinématiques & Trailers', desc:'Production de trailers de jeux et séquences narratives pour révéler vos univers.', tag:'Video'},
+    {icon:'🌐', titre:'Intégration WebGL', desc:'Expériences interactives 3D dans le navigateur — portfolios immersifs, démos produits.', tag:'WebGL'},
+    {icon:'🧠', titre:'Conseil & Direction', desc:'Accompagnement créatif et technique pour studios indépendants ou équipes ambitieuses.', tag:'Consulting'}
+  ],
+  projets:[
+    {emoji:'🌌', bg:'linear-gradient(135deg,#1a0533,#3b0764)', cat:'Moteur Vidéo', titre:'Nebula Engine v2', desc:'Moteur de rendu procédural pour la génération de galaxies interactives en temps réel.', lien:''},
+    {emoji:'🐉', bg:'linear-gradient(135deg,#001a1a,#003333)', cat:'Gaming · Narrative', titre:'Echos of Arath', desc:'RPG narratif avec système de mémoire dynamique — les choix du joueur façonnent l\'histoire.', lien:''},
+    {emoji:'🤖', bg:'linear-gradient(135deg,#0f0f2e,#1a1a4f)', cat:'Storytelling · Cinématique', titre:'SYNTH — Origine', desc:'Série de cinématiques in-engine narrant la genèse d\'une IA consciente.', lien:''},
+    {emoji:'🔥', bg:'linear-gradient(135deg,#1a0a00,#3d1f00)', cat:'WebGL · Interactif', titre:'Forge Interactive', desc:'Démo produit 3D immersive — exploration libre d\'un atelier en temps réel.', lien:''}
+  ],
+  contacts:[
+    {icon:'📧', label:'Email', valeur:'samoa@email.com', lien:'mailto:samoa@email.com'},
+    {icon:'▶️', label:'YouTube', valeur:'youtube.com/@samoa', lien:'https://youtube.com/@samoa'},
+    {icon:'🎮', label:'Discord', valeur:'Samoa#0000', lien:''},
+    {icon:'📸', label:'Instagram', valeur:'@samoa', lien:'https://instagram.com/samoa'}
+  ]
+};
+
+function getDB(k){ try{return JSON.parse(localStorage.getItem(k));}catch{return null;} }
+function trackVisit(){
+  const v=getDB('visits')||[];
+  v.unshift({id:Date.now(),date:new Date().toISOString(),page:'portfolio'});
+  localStorage.setItem('visits',JSON.stringify(v.slice(0,500)));
+}
+trackVisit();
+
+function render(){
+  const hero     = getDB('content_hero')     || DEFAULTS.hero;
+  const services = getDB('content_services') || DEFAULTS.services;
+  const projets  = getDB('content_projets')  || DEFAULTS.projets;
+  const contacts = getDB('content_contacts') || DEFAULTS.contacts;
+
+  // Hero
+  document.getElementById('hero-eyebrow').textContent = hero.eyebrow;
+  document.getElementById('hero-line1').textContent   = hero.line1;
+  document.getElementById('hero-line2').textContent   = hero.line2;
+  document.getElementById('hero-line3').textContent   = hero.line3;
+  document.getElementById('hero-sub').textContent     = hero.sub;
+  document.getElementById('hero-stats').innerHTML = (hero.stats||[]).map(s=>
+    `<div class="stat"><div class="stat-num">${esc(s.num)}</div><div class="stat-label">${esc(s.label)}</div></div>`
+  ).join('');
+
+  // Services
+  document.getElementById('services-grid').innerHTML = services.map(s=>`
+    <div class="service-card">
+      <span class="service-icon">${esc(s.icon)}</span>
+      <h3>${esc(s.titre)}</h3>
+      <p>${esc(s.desc)}</p>
+      <span class="service-tag">${esc(s.tag)}</span>
+    </div>`).join('');
+
+  // Projets
+  document.getElementById('projets-grid').innerHTML = projets.map(p=>`
+    <div class="projet-card">
+      <div class="projet-thumb" style="background:${p.bg||'linear-gradient(135deg,#1a0533,#3b0764)'}">
+        ${esc(p.emoji)}
+      </div>
+      <div class="projet-info">
+        <p class="projet-cat">${esc(p.cat)}</p>
+        <h3>${esc(p.titre)}</h3>
+        <p>${esc(p.desc)}</p>
+        ${p.lien ? `<a href="${esc(p.lien)}" class="projet-link" target="_blank" rel="noopener">Voir le projet →</a>` : ''}
+      </div>
+    </div>`).join('');
+
+  // Contacts
+  document.getElementById('contact-cards').innerHTML = contacts.map(c=>`
+    <div class="contact-card">
+      <div class="cc-icon">${esc(c.icon)}</div>
+      <div class="cc-label">${esc(c.label)}</div>
+      ${c.lien ? `<a href="${esc(c.lien)}" target="_blank" rel="noopener">${esc(c.valeur)}</a>` : `<div class="cc-val">${esc(c.valeur)}</div>`}
+    </div>`).join('');
+
+  // Footer socials
+  document.getElementById('footer-socials').innerHTML = contacts
+    .filter(c=>c.lien)
+    .map(c=>`<a href="${esc(c.lien)}" target="_blank" rel="noopener">${esc(c.icon)} ${esc(c.label)}</a>`)
+    .join('');
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// Écouter les changements en temps réel (depuis dashboard dans même navigateur)
+window.addEventListener('storage', e => {
+  if(e.key && e.key.startsWith('content_')) render();
+});
+
+render();
+
+/* FORMS */
+function pushDB(key,obj){
+  const arr=getDB(key)||[];
+  arr.unshift({...obj,id:Date.now(),date:new Date().toISOString()});
+  localStorage.setItem(key,JSON.stringify(arr));
+}
+
+function envoyerCommande(){
+  const prenom=document.getElementById('cmd-prenom').value.trim();
+  const nom=document.getElementById('cmd-nom').value.trim();
+  const email=document.getElementById('cmd-email').value.trim();
+  const type=document.getElementById('cmd-type').value;
+  const budget=document.getElementById('cmd-budget').value;
+  const desc=document.getElementById('cmd-desc').value.trim();
+  if(!prenom||!nom||!email||!type||!desc){alert('Merci de remplir tous les champs obligatoires (*).'); return;}
+  pushDB('commandes',{prenom,nom,email,type,budget,desc,statut:'Nouveau'});
+  document.getElementById('commandeForm').style.display='none';
+  document.getElementById('commandeSuccess').style.display='block';
+}
+
+function envoyerContact(){
+  const nom=document.getElementById('ct-nom').value.trim();
+  const email=document.getElementById('ct-email').value.trim();
+  const msg=document.getElementById('ct-msg').value.trim();
+  if(!nom||!email||!msg){alert('Merci de remplir tous les champs obligatoires (*).'); return;}
+  pushDB('messages',{nom,email,msg,lu:false});
+  document.getElementById('contactForm').style.display='none';
+  document.getElementById('contactSuccess').style.display='block';
+}
+</script>
+</body>
+</html>

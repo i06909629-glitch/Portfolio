@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Samoa Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg:#0A0A0F; --surface:#1E1E2E; --card:#16162A;
+      --violet:#7C3AED; --vl:#A855F7; --cyan:#00F5FF;
+      --green:#10B981; --amber:#F59E0B; --red:#EF4444;
+      --white:#E8E6F0; --muted:#8B8BA7; --border:rgba(124,58,237,.2);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--white);font-family:'Inter',sans-serif;min-height:100vh;}
+
+    /* LOGIN */
+    #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 50%,rgba(124,58,237,.12) 0%,transparent 60%),var(--bg);}
+    .login-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:3rem 2.5rem;width:100%;max-width:380px;text-align:center;}
+    .login-logo{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:var(--cyan);margin-bottom:.3rem;}
+    .login-logo span{color:var(--vl);}
+    .login-sub{font-size:.8rem;color:var(--muted);margin-bottom:2rem;letter-spacing:.05em;}
+    .login-label{display:block;text-align:left;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+    .login-input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:5px;padding:.75rem 1rem;color:var(--white);font-size:.95rem;outline:none;transition:border-color .2s;margin-bottom:1.2rem;}
+    .login-input:focus{border-color:var(--cyan);}
+    .login-btn{width:100%;padding:.85rem;background:var(--violet);color:#fff;border:none;border-radius:5px;font-family:'Orbitron',monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s;}
+    .login-btn:hover{background:var(--vl);}
+    .login-err{color:var(--red);font-size:.8rem;margin-top:.8rem;display:none;}
+
+    /* LAYOUT */
+    #dashboard{display:none;}
+    .dash-layout{display:flex;min-height:100vh;}
+
+    /* SIDEBAR */
+    .sidebar{width:230px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:1.5rem 0;position:sticky;top:0;height:100vh;overflow-y:auto;}
+    .sb-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.05rem;color:var(--cyan);padding:0 1.2rem 1.2rem;border-bottom:1px solid var(--border);}
+    .sb-logo span{color:var(--vl);}
+    .sb-logo small{display:block;font-size:.6rem;color:var(--muted);letter-spacing:.1em;margin-top:.2rem;font-family:'Inter',sans-serif;font-weight:400;}
+    .sb-section{padding:.8rem 1.2rem .3rem;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(139,139,167,.5);}
+    .sb-item{display:flex;align-items:center;gap:.7rem;padding:.65rem 1.2rem;cursor:pointer;font-size:.85rem;color:var(--muted);transition:color .2s,background .2s;position:relative;}
+    .sb-item:hover{color:var(--white);background:rgba(124,58,237,.08);}
+    .sb-item.active{color:var(--cyan);background:rgba(0,245,255,.06);}
+    .sb-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cyan);border-radius:0 2px 2px 0;}
+    .sb-badge{margin-left:auto;background:var(--violet);color:#fff;font-size:.6rem;font-weight:700;padding:.15rem .4rem;border-radius:20px;}
+    .sb-footer{margin-top:auto;padding:1rem 1.2rem;border-top:1px solid var(--border);}
+    .sb-logout{font-size:.8rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:.5rem;transition:color .2s;}
+    .sb-logout:hover{color:var(--red);}
+
+    /* MAIN */
+    .dash-main{flex:1;padding:2rem 2.5rem;overflow-y:auto;}
+    .dash-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;}
+    .page-title{font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:700;}
+    .topbar-right{display:flex;align-items:center;gap:1rem;}
+    .topbar-date{font-size:.8rem;color:var(--muted);}
+    .btn-preview{background:transparent;border:1px solid var(--cyan);color:var(--cyan);padding:.45rem 1rem;border-radius:4px;font-size:.78rem;cursor:pointer;text-decoration:none;transition:background .2s;}
+    .btn-preview:hover{background:rgba(0,245,255,.08);}
+
+    /* PAGES */
+    .page{display:none;}
+    .page.active{display:block;}
+
+    /* KPI */
+    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.2rem;margin-bottom:2.5rem;}
+    .kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.3rem 1.4rem;}
+    .kpi-label{font-size:.72rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;}
+    .kpi-val{font-family:'Orbitron',monospace;font-size:1.9rem;font-weight:900;}
+    .kpi-val.cyan{color:var(--cyan);} .kpi-val.violet{color:var(--vl);}
+    .kpi-val.green{color:var(--green);} .kpi-val.amber{color:var(--amber);}
+    .kpi-hint{font-size:.72rem;color:var(--muted);margin-top:.3rem;}
+
+    /* CARDS */
+    .section-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:2rem;}
+    .section-card-header{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem;}
+    .section-card-header h3{font-family:'Orbitron',monospace;font-size:.88rem;font-weight:700;}
+
+    /* TABLES */
+    .table-wrap{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;font-size:.85rem;}
+    th{text-align:left;padding:.7rem 1rem;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}
+    td{padding:.7rem 1rem;border-bottom:1px solid rgba(124,58,237,.07);vertical-align:middle;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:rgba(124,58,237,.04);}
+    .td-muted{color:var(--muted);font-size:.8rem;}
+    .empty-state{padding:2.5rem;text-align:center;color:var(--muted);font-size:.9rem;}
+    .badge{display:inline-block;padding:.2rem .55rem;border-radius:20px;font-size:.68rem;font-weight:600;letter-spacing:.05em;}
+    .badge-new{background:rgba(124,58,237,.2);color:var(--vl);}
+    .badge-read{background:rgba(139,139,167,.15);color:var(--muted);}
+    .badge-done{background:rgba(16,185,129,.15);color:var(--green);}
+    .badge-pending{background:rgba(245,158,11,.15);color:var(--amber);}
+
+    /* BUTTONS */
+    .btn-sm{background:transparent;border:1px solid var(--border);color:var(--muted);padding:.3rem .65rem;border-radius:4px;cursor:pointer;font-size:.73rem;transition:border-color .2s,color .2s;}
+    .btn-sm:hover{border-color:var(--cyan);color:var(--cyan);}
+    .btn-sm.danger:hover{border-color:var(--red);color:var(--red);}
+    .btn-sm.success{border-color:var(--green);color:var(--green);}
+    .btn-add{background:var(--violet);color:#fff;border:none;padding:.45rem 1rem;border-radius:4px;font-size:.8rem;cursor:pointer;transition:background .2s;}
+    .btn-add:hover{background:var(--vl);}
+    .btn-save{background:linear-gradient(135deg,var(--violet),#5b21b6);color:#fff;border:none;padding:.55rem 1.4rem;border-radius:4px;font-family:'Orbitron',monospace;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:opacity .2s;}
+    .btn-save:hover{opacity:.85;}
+    .btn-danger-full{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.3);padding:.45rem 1rem;border-radius:4px;font-size:.8rem;cursor:pointer;transition:background .2s;}
+    .btn-danger-full:hover{background:rgba(239,68,68,.2);}
+
+    /* FORMS inside editor */
+    .field-group{margin-bottom:1rem;}
+    .field-group label{display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem;}
+    .field-group input,.field-group textarea,.field-group select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.6rem .8rem;color:var(--white);font-family:'Inter',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;}
+    .field-group input:focus,.field-group textarea:focus,.field-group select:focus{border-color:var(--cyan);}
+    .field-group textarea{resize:vertical;min-height:70px;}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+
+    /* EDITOR PANEL */
+    .editor-panel{padding:1.4rem;}
+    .editor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem;}
+
+    /* ITEM CARD (projet, service, contact editable) */
+    .item-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.2rem;position:relative;}
+    .item-card-handle{font-size:.7rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.8rem;display:flex;align-items:center;justify-content:space-between;}
+    .item-actions{display:flex;gap:.4rem;}
+
+    /* CHART */
+    .chart-bar-wrap{padding:1.4rem;}
+    .chart-bars{display:flex;align-items:flex-end;gap:.4rem;height:110px;}
+    .bar{flex:1;border-radius:3px 3px 0 0;background:linear-gradient(180deg,var(--violet),rgba(124,58,237,.3));cursor:default;min-height:4px;}
+    .bar:hover{background:linear-gradient(180deg,var(--cyan),rgba(0,245,255,.3));}
+    .chart-labels{display:flex;gap:.4rem;margin-top:.4rem;}
+    .chart-label-item{flex:1;text-align:center;font-size:.6rem;color:var(--muted);}
+
+    /* TOAST */
+    #toast{position:fixed;bottom:2rem;right:2rem;background:var(--green);color:#fff;padding:.75rem 1.4rem;border-radius:6px;font-size:.85rem;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
+    #toast.show{opacity:1;}
+
+    /* SELECT statut */
+    .statut-select{background:var(--surface);border:1px solid var(--border);color:var(--white);padding:.3rem .5rem;border-radius:4px;font-size:.78rem;outline:none;}
+
+    @media(max-width:768px){.sidebar{display:none;}.dash-main{padding:1.2rem;}.field-row{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">SAMOA<span>.DEV</span></div>
+    <p class="login-sub">// PANNEAU ADMINISTRATION</p>
+    <label class="login-label">Identifiant</label>
+    <input class="login-input" id="loginUser" type="text" placeholder="samoa" autocomplete="username"/>
+    <label class="login-label">Mot de passe</label>
+    <input class="login-input" id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="login-btn" onclick="doLogin()">⚡ Connexion</button>
+    <p class="login-err" id="loginErr">Identifiants incorrects.</p>
+  </div>
+</div>
+
+<div id="dashboard">
+  <div class="dash-layout">
+    <aside class="sidebar">
+      <div class="sb-logo">SAMOA<span>.DEV</span><small>Admin Panel</small></div>
+      <nav style="flex:1">
+        <div class="sb-section">Données</div>
+        <div class="sb-item active" onclick="goPage('overview',this)">📊 Vue d'ensemble</div>
+        <div class="sb-item" onclick="goPage('visites',this)">👁 Visites <span class="sb-badge" id="badge-visites">0</span></div>
+        <div class="sb-item" onclick="goPage('commandes',this)">📦 Commandes <span class="sb-badge" id="badge-commandes">0</span></div>
+        <div class="sb-item" onclick="goPage('messages',this)">💬 Messages <span class="sb-badge" id="badge-messages">0</span></div>
+
+        <div class="sb-section" style="margin-top:.5rem">Contenu du site</div>
+        <div class="sb-item" onclick="goPage('edit-hero',this)">🦸 Hero & Stats</div>
+        <div class="sb-item" onclick="goPage('edit-projets',this)">🎬 Projets</div>
+        <div class="sb-item" onclick="goPage('edit-services',this)">⚙️ Services</div>
+        <div class="sb-item" onclick="goPage('edit-contacts',this)">📡 Contacts & Réseaux</div>
+      </nav>
+      <div class="sb-footer">
+        <div class="sb-logout" onclick="doLogout()">🔒 Se déconnecter</div>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <div class="dash-topbar">
+        <h1 class="page-title" id="pageTitle">Vue d'ensemble</h1>
+        <div class="topbar-right">
+          <span class="topbar-date" id="topbarDate"></span>
+          <a class="btn-preview" href="index.html" target="_blank">👁 Voir le site</a>
+        </div>
+      </div>
+
+      <!-- ═══ OVERVIEW ═══ -->
+      <div class="page active" id="page-overview">
+        <div class="kpi-grid">
+          <div class="kpi"><div class="kpi-label">Visites</div><div class="kpi-val cyan" id="kpi-visits">0</div><div class="kpi-hint">Toutes sessions</div></div>
+          <div class="kpi"><div class="kpi-label">Commandes</div><div class="kpi-val violet" id="kpi-commandes">0</div><div class="kpi-hint">Demandes reçues</div></div>
+          <div class="kpi"><div class="kpi-label">Messages</div><div class="kpi-val green" id="kpi-messages">0</div><div class="kpi-hint">Contacts entrants</div></div>
+          <div class="kpi"><div class="kpi-label">Non lus</div><div class="kpi-val amber" id="kpi-unread">0</div><div class="kpi-hint">À traiter</div></div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header"><h3>Activité — 7 derniers jours</h3><button class="btn-sm" onclick="renderAll()">↻ Actualiser</button></div>
+          <div class="chart-bar-wrap"><div class="chart-bars" id="chartBars"></div><div class="chart-labels" id="chartLabels"></div></div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header"><h3>Dernières commandes</h3></div>
+          <div class="table-wrap"><table><thead><tr><th>Nom</th><th>Type</th><th>Budget</th><th>Date</th><th>Statut</th></tr></thead><tbody id="recentCommandes"></tbody></table></div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header"><h3>Derniers messages</h3></div>
+          <div class="table-wrap"><table><thead><tr><th>Nom</th><th>Email</th><th>Aperçu</th><th>Date</th><th>État</th></tr></thead><tbody id="recentMessages"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ═══ VISITES ═══ -->
+      <div class="page" id="page-visites">
+        <div class="section-card">
+          <div class="section-card-header"><h3>Journal des visites</h3><button class="btn-sm" onclick="renderAll()">↻ Actualiser</button></div>
+          <div class="table-wrap"><table><thead><tr><th>#</th><th>Date</th><th>Page</th></tr></thead><tbody id="visitesList"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ═══ COMMANDES ═══ -->
+      <div class="page" id="page-commandes">
+        <div class="section-card">
+          <div class="section-card-header"><h3>Toutes les commandes</h3><button class="btn-sm" onclick="renderAll()">↻ Actualiser</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Nom</th><th>Email</th><th>Type</th><th>Budget</th><th>Description</th><th>Date</th><th>Statut</th><th></th></tr></thead><tbody id="commandesList"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ═══ MESSAGES ═══ -->
+      <div class="page" id="page-messages">
+        <div class="section-card">
+          <div class="section-card-header"><h3>Tous les messages</h3><button class="btn-sm" onclick="renderAll()">↻ Actualiser</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Nom</th><th>Email</th><th>Message</th><th>Date</th><th>État</th><th></th></tr></thead><tbody id="messagesList"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- ═══ EDIT HERO ═══ -->
+      <div class="page" id="page-edit-hero">
+        <div class="section-card">
+          <div class="section-card-header"><h3>Hero — Accroche principale</h3><button class="btn-save" onclick="saveHero()">💾 Enregistrer</button></div>
+          <div class="editor-panel">
+            <div class="field-row">
+              <div class="field-group"><label>Accroche (texte sous le logo)</label><input type="text" id="h-eyebrow" placeholder="// Moteur · Narration · Pixel"/></div>
+              <div class="field-group"><label>Ligne 1 (violet)</label><input type="text" id="h-line1" placeholder="Je construis"/></div>
+            </div>
+            <div class="field-row">
+              <div class="field-group"><label>Ligne 2 (blanc)</label><input type="text" id="h-line2" placeholder="des mondes"/></div>
+              <div class="field-group"><label>Ligne 3 (cyan)</label><input type="text" id="h-line3" placeholder="jouables."/></div>
+            </div>
+            <div class="field-group"><label>Sous-titre</label><textarea id="h-sub" rows="2"></textarea></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header"><h3>Stats du hero</h3><button class="btn-add" onclick="addStat()">+ Ajouter une stat</button></div>
+          <div class="editor-panel"><div id="stats-list" style="display:flex;flex-direction:column;gap:.8rem;"></div></div>
+          <div style="padding:0 1.4rem 1.4rem"><button class="btn-save" onclick="saveHero()">💾 Enregistrer les stats</button></div>
+        </div>
+      </div>
+
+      <!-- ═══ EDIT PROJETS ═══ -->
+      <div class="page" id="page-edit-projets">
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>Projets du portfolio</h3>
+            <div style="display:flex;gap:.6rem">
+              <button class="btn-add" onclick="addProjet()">+ Nouveau projet</button>
+              <button class="btn-save" onclick="saveProjets()">💾 Enregistrer</button>
+            </div>
+          </div>
+          <div class="editor-panel"><div class="editor-grid" id="projets-editor"></div></div>
+        </div>
+      </div>
+
+      <!-- ═══ EDIT SERVICES ═══ -->
+      <div class="page" id="page-edit-services">
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>Services proposés</h3>
+            <div style="display:flex;gap:.6rem">
+              <button class="btn-add" onclick="addService()">+ Nouveau service</button>
+              <button class="btn-save" onclick="saveServices()">💾 Enregistrer</button>
+            </div>
+          </div>
+          <div class="editor-panel"><div class="editor-grid" id="services-editor"></div></div>
+        </div>
+      </div>
+
+      <!-- ═══ EDIT CONTACTS ═══ -->
+      <div class="page" id="page-edit-contacts">
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>Contacts & Réseaux sociaux</h3>
+            <div style="display:flex;gap:.6rem">
+              <button class="btn-add" onclick="addContact()">+ Ajouter</button>
+              <button class="btn-save" onclick="saveContacts()">💾 Enregistrer</button>
+            </div>
+          </div>
+          <div class="editor-panel"><div class="editor-grid" id="contacts-editor"></div></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<div id="toast">✅ Enregistré !</div>
+
+<script>
+/* ══════════════════════════════
+   AUTH
+══════════════════════════════ */
+const CREDS = { user:'samoa', pass:'samoa2026' }; // ← changer après déploiement
+
+function doLogin(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value.trim();
+  if(u===CREDS.user && p===CREDS.pass){
+    sessionStorage.setItem('auth','1');
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    init();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+  }
+}
+function doLogout(){ sessionStorage.removeItem('auth'); location.reload(); }
+if(sessionStorage.getItem('auth')==='1'){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+}
+
+/* ══════════════════════════════
+   NAV
+══════════════════════════════ */
+function goPage(id, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+  const titles={overview:'Vue d\'ensemble',visites:'Visites',commandes:'Commandes',messages:'Messages','edit-hero':'Hero & Stats','edit-projets':'Projets','edit-services':'Services','edit-contacts':'Contacts & Réseaux'};
+  document.getElementById('pageTitle').textContent=titles[id]||id;
+  if(id==='edit-hero') loadHeroEditor();
+  if(id==='edit-projets') loadProjetsEditor();
+  if(id==='edit-services') loadServicesEditor();
+  if(id==='edit-contacts') loadContactsEditor();
+  renderAll();
+}
+
+/* ══════════════════════════════
+   DB HELPERS
+══════════════════════════════ */
+function getDB(k){ try{return JSON.parse(localStorage.getItem(k));}catch{return null;} }
+function saveDB(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtDate(iso){ if(!iso)return'—'; const d=new Date(iso); return d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }
+
+/* ══════════════════════════════
+   DEFAULTS
+══════════════════════════════ */
+const D_HERO={
+  eyebrow:'// Moteur · Narration · Pixel',
+  line1:'Je construis', line2:'des mondes', line3:'jouables.',
+  sub:'Moteurs vidéo sur mesure, expériences narratives immersives et storytelling visuel — chaque projet est une nouvelle réalité à explorer.',
+  stats:[{num:'24+',label:'Projets livrés'},{num:'8',label:'Moteurs créés'},{num:'100%',label:'Sur mesure'}]
+};
+const D_SERVICES=[
+  {icon:'⚙️',titre:'Moteurs Vidéo Custom',desc:'Développement de moteurs de rendu et d\'animation sur mesure.',tag:'Engine Dev'},
+  {icon:'🎮',titre:'Expériences Gaming',desc:'Conception et développement d\'expériences interactives et jeux vidéo.',tag:'Game Design'},
+  {icon:'📖',titre:'Storytelling Visuel',desc:'Narration transmedia — scénarios, visuels cinématiques et direction artistique.',tag:'Narrative'},
+  {icon:'🎬',titre:'Cinématiques & Trailers',desc:'Production de trailers de jeux et séquences narratives.',tag:'Video'},
+  {icon:'🌐',titre:'Intégration WebGL',desc:'Expériences interactives 3D dans le navigateur.',tag:'WebGL'},
+  {icon:'🧠',titre:'Conseil & Direction',desc:'Accompagnement créatif et technique pour studios indépendants.',tag:'Consulting'}
+];
+const D_PROJETS=[
+  {emoji:'🌌',bg:'linear-gradient(135deg,#1a0533,#3b0764)',cat:'Moteur Vidéo',titre:'Nebula Engine v2',desc:'Moteur de rendu procédural pour la génération de galaxies interactives en temps réel.',lien:''},
+  {emoji:'🐉',bg:'linear-gradient(135deg,#001a1a,#003333)',cat:'Gaming · Narrative',titre:'Echos of Arath',desc:'RPG narratif avec système de mémoire dynamique.',lien:''},
+  {emoji:'🤖',bg:'linear-gradient(135deg,#0f0f2e,#1a1a4f)',cat:'Storytelling',titre:'SYNTH — Origine',desc:'Série de cinématiques in-engine narrant la genèse d\'une IA consciente.',lien:''},
+  {emoji:'🔥',bg:'linear-gradient(135deg,#1a0a00,#3d1f00)',cat:'WebGL',titre:'Forge Interactive',desc:'Démo produit 3D immersive pour une fonderie artisanale.',lien:''}
+];
+const D_CONTACTS=[
+  {icon:'📧',label:'Email',valeur:'samoa@email.com',lien:'mailto:samoa@email.com'},
+  {icon:'▶️',label:'YouTube',valeur:'youtube.com/@samoa',lien:'https://youtube.com/@samoa'},
+  {icon:'🎮',label:'Discord',valeur:'Samoa#0000',lien:''},
+  {icon:'📸',label:'Instagram',valeur:'@samoa',lien:'https://instagram.com/samoa'}
+];
+
+/* ══════════════════════════════
+   TOAST
+══════════════════════════════ */
+function toast(msg='✅ Enregistré !'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+/* ══════════════════════════════
+   STATS / KPI
+══════════════════════════════ */
+function renderAll(){
+  setDate();
+  const visits   =getDB('visits')||[];
+  const commandes=getDB('commandes')||[];
+  const messages =getDB('messages')||[];
+  const unread=commandes.filter(c=>c.statut==='Nouveau').length+messages.filter(m=>!m.lu).length;
+
+  document.getElementById('badge-visites').textContent   =visits.length;
+  document.getElementById('badge-commandes').textContent =commandes.length;
+  document.getElementById('badge-messages').textContent  =messages.length;
+  document.getElementById('kpi-visits').textContent      =visits.length;
+  document.getElementById('kpi-commandes').textContent   =commandes.length;
+  document.getElementById('kpi-messages').textContent    =messages.length;
+  document.getElementById('kpi-unread').textContent      =unread;
+
+  renderChart(visits);
+  renderRecentCommandes(commandes.slice(0,5));
+  renderRecentMessages(messages.slice(0,5));
+  renderVisites(visits);
+  renderCommandesList(commandes);
+  renderMessagesList(messages);
+}
+
+function setDate(){
+  document.getElementById('topbarDate').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+
+function renderChart(visits){
+  const bars=document.getElementById('chartBars'),labels=document.getElementById('chartLabels');
+  bars.innerHTML='';labels.innerHTML='';
+  const days=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const key=d.toLocaleDateString('fr-FR',{weekday:'short'});
+    const dateStr=d.toLocaleDateString('fr-FR');
+    const count=visits.filter(v=>new Date(v.date).toLocaleDateString('fr-FR')===dateStr).length;
+    days.push({key,count});
+  }
+  const max=Math.max(...days.map(d=>d.count),1);
+  days.forEach(d=>{
+    const h=Math.max((d.count/max)*100,4);
+    bars.innerHTML+=`<div class="bar" style="height:${h}px" title="${d.count} visite(s)"></div>`;
+    labels.innerHTML+=`<div class="chart-label-item">${d.key}</div>`;
+  });
+}
+
+function renderRecentCommandes(arr){
+  const el=document.getElementById('recentCommandes');
+  if(!arr.length){el.innerHTML=`<tr><td colspan="5" class="empty-state">Aucune commande.</td></tr>`;return;}
+  el.innerHTML=arr.map(c=>`<tr>
+    <td>${esc(c.prenom)} ${esc(c.nom)}</td>
+    <td class="td-muted">${esc(c.type)}</td>
+    <td class="td-muted">${esc(c.budget||'—')}</td>
+    <td class="td-muted">${fmtDate(c.date)}</td>
+    <td><span class="badge ${c.statut==='Nouveau'?'badge-new':c.statut==='En cours'?'badge-pending':'badge-done'}">${esc(c.statut)}</span></td>
+  </tr>`).join('');
+}
+
+function renderRecentMessages(arr){
+  const el=document.getElementById('recentMessages');
+  if(!arr.length){el.innerHTML=`<tr><td colspan="5" class="empty-state">Aucun message.</td></tr>`;return;}
+  el.innerHTML=arr.map(m=>`<tr>
+    <td>${esc(m.nom)}</td>
+    <td class="td-muted">${esc(m.email)}</td>
+    <td class="td-muted">${esc((m.msg||'').substring(0,55))}…</td>
+    <td class="td-muted">${fmtDate(m.date)}</td>
+    <td><span class="badge ${m.lu?'badge-read':'badge-new'}">${m.lu?'Lu':'Non lu'}</span></td>
+  </tr>`).join('');
+}
+
+function renderVisites(arr){
+  const el=document.getElementById('visitesList');
+  if(!arr.length){el.innerHTML=`<tr><td colspan="3" class="empty-state">Aucune visite.</td></tr>`;return;}
+  el.innerHTML=arr.map((v,i)=>`<tr>
+    <td class="td-muted">${arr.length-i}</td>
+    <td>${fmtDate(v.date)}</td>
+    <td class="td-muted">${esc(v.page||'portfolio')}</td>
+  </tr>`).join('');
+}
+
+function renderCommandesList(arr){
+  const el=document.getElementById('commandesList');
+  if(!arr.length){el.innerHTML=`<tr><td colspan="8" class="empty-state">Aucune commande.</td></tr>`;return;}
+  el.innerHTML=arr.map((c,i)=>`<tr>
+    <td>${esc(c.prenom)} ${esc(c.nom)}</td>
+    <td class="td-muted"><a href="mailto:${esc(c.email)}" style="color:var(--cyan)">${esc(c.email)}</a></td>
+    <td>${esc(c.type)}</td>
+    <td class="td-muted">${esc(c.budget||'—')}</td>
+    <td class="td-muted" style="max-width:180px;white-space:normal">${esc((c.desc||'').substring(0,80))}${c.desc&&c.desc.length>80?'…':''}</td>
+    <td class="td-muted">${fmtDate(c.date)}</td>
+    <td><select class="statut-select" onchange="updateStatutCmd(${i},this.value)">
+      <option ${c.statut==='Nouveau'?'selected':''}>Nouveau</option>
+      <option ${c.statut==='En cours'?'selected':''}>En cours</option>
+      <option ${c.statut==='Terminé'?'selected':''}>Terminé</option>
+    </select></td>
+    <td><button class="btn-sm danger" onclick="deleteCmd(${i})">✕</button></td>
+  </tr>`).join('');
+}
+
+function renderMessagesList(arr){
+  const el=document.getElementById('messagesList');
+  if(!arr.length){el.innerHTML=`<tr><td colspan="6" class="empty-state">Aucun message.</td></tr>`;return;}
+  el.innerHTML=arr.map((m,i)=>`<tr>
+    <td>${esc(m.nom)}</td>
+    <td class="td-muted"><a href="mailto:${esc(m.email)}" style="color:var(--cyan)">${esc(m.email)}</a></td>
+    <td style="white-space:normal;max-width:220px;color:var(--muted);font-size:.82rem">${esc(m.msg||'')}</td>
+    <td class="td-muted">${fmtDate(m.date)}</td>
+    <td><button class="btn-sm" onclick="toggleLu(${i})">${m.lu?'Marquer non lu':'Marquer lu'}</button></td>
+    <td><button class="btn-sm danger" onclick="deleteMsg(${i})">✕</button></td>
+  </tr>`).join('');
+}
+
+function updateStatutCmd(i,val){const a=getDB('commandes')||[];a[i].statut=val;saveDB('commandes',a);renderAll();}
+function deleteCmd(i){if(!confirm('Supprimer ?'))return;const a=getDB('commandes')||[];a.splice(i,1);saveDB('commandes',a);renderAll();}
+function toggleLu(i){const a=getDB('messages')||[];a[i].lu=!a[i].lu;saveDB('messages',a);renderAll();}
+function deleteMsg(i){if(!confirm('Supprimer ?'))return;const a=getDB('messages')||[];a.splice(i,1);saveDB('messages',a);renderAll();}
+
+/* ══════════════════════════════
+   ÉDITEUR HERO
+══════════════════════════════ */
+function loadHeroEditor(){
+  const h=getDB('content_hero')||D_HERO;
+  document.getElementById('h-eyebrow').value=h.eyebrow||'';
+  document.getElementById('h-line1').value=h.line1||'';
+  document.getElementById('h-line2').value=h.line2||'';
+  document.getElementById('h-line3').value=h.line3||'';
+  document.getElementById('h-sub').value=h.sub||'';
+  renderStatsEditor(h.stats||[]);
+}
+
+function renderStatsEditor(stats){
+  document.getElementById('stats-list').innerHTML=stats.map((s,i)=>`
+    <div style="display:flex;gap:.6rem;align-items:center" id="stat-row-${i}">
+      <input type="text" value="${esc(s.num)}" placeholder="24+" style="width:80px;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.5rem .7rem;color:var(--white);font-size:.85rem;outline:none;" id="snum-${i}"/>
+      <input type="text" value="${esc(s.label)}" placeholder="Projets livrés" style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:.5rem .7rem;color:var(--white);font-size:.85rem;outline:none;" id="slbl-${i}"/>
+      <button class="btn-sm danger" onclick="removeStat(${i})">✕</button>
+    </div>`).join('');
+}
+
+function addStat(){
+  const h=getDB('content_hero')||D_HERO;
+  h.stats=h.stats||[];
+  h.stats.push({num:'0',label:'Nouvelle stat'});
+  renderStatsEditor(h.stats);
+}
+
+function removeStat(i){
+  const h=getDB('content_hero')||D_HERO;
+  h.stats=h.stats||[];
+  h.stats.splice(i,1);
+  renderStatsEditor(h.stats);
+}
+
+function saveHero(){
+  const rows=document.querySelectorAll('[id^="stat-row-"]');
+  const stats=[];
+  rows.forEach((r,i)=>{
+    const num=document.getElementById('snum-'+i);
+    const lbl=document.getElementById('slbl-'+i);
+    if(num&&lbl) stats.push({num:num.value,label:lbl.value});
+  });
+  const h={
+    eyebrow:document.getElementById('h-eyebrow').value,
+    line1:document.getElementById('h-line1').value,
+    line2:document.getElementById('h-line2').value,
+    line3:document.getElementById('h-line3').value,
+    sub:document.getElementById('h-sub').value,
+    stats
+  };
+  saveDB('content_hero',h);
+  toast('✅ Hero mis à jour !');
+}
+
+/* ══════════════════════════════
+   ÉDITEUR PROJETS
+══════════════════════════════ */
+let projetsData=[];
+
+function loadProjetsEditor(){
+  projetsData=JSON.parse(JSON.stringify(getDB('content_projets')||D_PROJETS));
+  renderProjetsEditor();
+}
+
+function renderProjetsEditor(){
+  document.getElementById('projets-editor').innerHTML=projetsData.map((p,i)=>`
+    <div class="item-card">
+      <div class="item-card-handle">
+        <span>Projet ${i+1}</span>
+        <div class="item-actions">
+          <button class="btn-sm danger" onclick="removeProjet(${i})">✕ Supprimer</button>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Emoji</label><input type="text" id="p-emoji-${i}" value="${esc(p.emoji)}" placeholder="🎮"/></div>
+        <div class="field-group"><label>Catégorie</label><input type="text" id="p-cat-${i}" value="${esc(p.cat)}" placeholder="Gaming"/></div>
+      </div>
+      <div class="field-group"><label>Titre</label><input type="text" id="p-titre-${i}" value="${esc(p.titre)}" placeholder="Nom du projet"/></div>
+      <div class="field-group"><label>Description</label><textarea id="p-desc-${i}" rows="2">${esc(p.desc)}</textarea></div>
+      <div class="field-group"><label>Lien (YouTube, site, etc.)</label><input type="url" id="p-lien-${i}" value="${esc(p.lien)}" placeholder="https://youtube.com/..."/></div>
+      <div class="field-group"><label>Couleur fond (CSS gradient)</label><input type="text" id="p-bg-${i}" value="${esc(p.bg)}" placeholder="linear-gradient(135deg,#1a0533,#3b0764)"/></div>
+    </div>`).join('');
+}
+
+function addProjet(){
+  projetsData.push({emoji:'🎬',bg:'linear-gradient(135deg,#1a0533,#3b0764)',cat:'Nouveau',titre:'Nouveau projet',desc:'Description du projet.',lien:''});
+  renderProjetsEditor();
+}
+
+function removeProjet(i){
+  projetsData.splice(i,1);
+  renderProjetsEditor();
+}
+
+function saveProjets(){
+  const saved=projetsData.map((p,i)=>({
+    emoji:document.getElementById(`p-emoji-${i}`).value,
+    cat:document.getElementById(`p-cat-${i}`).value,
+    titre:document.getElementById(`p-titre-${i}`).value,
+    desc:document.getElementById(`p-desc-${i}`).value,
+    lien:document.getElementById(`p-lien-${i}`).value,
+    bg:document.getElementById(`p-bg-${i}`).value||p.bg
+  }));
+  saveDB('content_projets',saved);
+  projetsData=saved;
+  toast('✅ Projets mis à jour !');
+}
+
+/* ══════════════════════════════
+   ÉDITEUR SERVICES
+══════════════════════════════ */
+let servicesData=[];
+
+function loadServicesEditor(){
+  servicesData=JSON.parse(JSON.stringify(getDB('content_services')||D_SERVICES));
+  renderServicesEditor();
+}
+
+function renderServicesEditor(){
+  document.getElementById('services-editor').innerHTML=servicesData.map((s,i)=>`
+    <div class="item-card">
+      <div class="item-card-handle">
+        <span>Service ${i+1}</span>
+        <button class="btn-sm danger" onclick="removeService(${i})">✕</button>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Icône (emoji)</label><input type="text" id="sv-icon-${i}" value="${esc(s.icon)}" placeholder="⚙️"/></div>
+        <div class="field-group"><label>Tag</label><input type="text" id="sv-tag-${i}" value="${esc(s.tag)}" placeholder="Engine Dev"/></div>
+      </div>
+      <div class="field-group"><label>Titre</label><input type="text" id="sv-titre-${i}" value="${esc(s.titre)}"/></div>
+      <div class="field-group"><label>Description</label><textarea id="sv-desc-${i}" rows="2">${esc(s.desc)}</textarea></div>
+    </div>`).join('');
+}
+
+function addService(){
+  servicesData.push({icon:'✨',titre:'Nouveau service',desc:'Description du service.',tag:'Service'});
+  renderServicesEditor();
+}
+
+function removeService(i){
+  servicesData.splice(i,1);
+  renderServicesEditor();
+}
+
+function saveServices(){
+  const saved=servicesData.map((s,i)=>({
+    icon:document.getElementById(`sv-icon-${i}`).value,
+    titre:document.getElementById(`sv-titre-${i}`).value,
+    desc:document.getElementById(`sv-desc-${i}`).value,
+    tag:document.getElementById(`sv-tag-${i}`).value
+  }));
+  saveDB('content_services',saved);
+  servicesData=saved;
+  toast('✅ Services mis à jour !');
+}
+
+/* ══════════════════════════════
+   ÉDITEUR CONTACTS
+══════════════════════════════ */
+let contactsData=[];
+
+function loadContactsEditor(){
+  contactsData=JSON.parse(JSON.stringify(getDB('content_contacts')||D_CONTACTS));
+  renderContactsEditor();
+}
+
+function renderContactsEditor(){
+  document.getElementById('contacts-editor').innerHTML=contactsData.map((c,i)=>`
+    <div class="item-card">
+      <div class="item-card-handle">
+        <span>${esc(c.label)||'Contact '+( i+1)}</span>
+        <button class="btn-sm danger" onclick="removeContact(${i})">✕</button>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Icône (emoji)</label><input type="text" id="ct-icon-${i}" value="${esc(c.icon)}" placeholder="▶️"/></div>
+        <div class="field-group"><label>Label</label><input type="text" id="ct-label-${i}" value="${esc(c.label)}" placeholder="YouTube"/></div>
+      </div>
+      <div class="field-group"><label>Valeur affichée</label><input type="text" id="ct-val-${i}" value="${esc(c.valeur)}" placeholder="youtube.com/@samoa"/></div>
+      <div class="field-group"><label>Lien URL (optionnel)</label><input type="url" id="ct-lien-${i}" value="${esc(c.lien)}" placeholder="https://youtube.com/@samoa"/></div>
+    </div>`).join('');
+}
+
+function addContact(){
+  contactsData.push({icon:'🔗',label:'Réseau',valeur:'@handle',lien:''});
+  renderContactsEditor();
+}
+
+function removeContact(i){
+  contactsData.splice(i,1);
+  renderContactsEditor();
+}
+
+function saveContacts(){
+  const saved=contactsData.map((c,i)=>({
+    icon:document.getElementById(`ct-icon-${i}`).value,
+    label:document.getElementById(`ct-label-${i}`).value,
+    valeur:document.getElementById(`ct-val-${i}`).value,
+    lien:document.getElementById(`ct-lien-${i}`).value
+  }));
+  saveDB('content_contacts',saved);
+  contactsData=saved;
+  toast('✅ Contacts mis à jour !');
+}
+
+/* ══════════════════════════════
+   INIT
+══════════════════════════════ */
+function init(){ renderAll(); setDate(); }
+if(sessionStorage.getItem('auth')==='1') init();
+</script>
+</body>
+</html>
