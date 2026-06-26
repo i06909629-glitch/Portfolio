@@ -6,25 +6,23 @@
   <title>Samoa — Moteurs Vidéo & Storytelling</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --bg:#0A0A0F; --surface:#1E1E2E; --violet:#7C3AED; --vl:#A855F7;
-      --cyan:#00F5FF; --white:#E8E6F0; --muted:#8B8BA7; --card:#16162A;
+    :root{
+      --bg:#0A0A0F;--surface:#1E1E2E;--violet:#7C3AED;--vl:#A855F7;
+      --cyan:#00F5FF;--white:#E8E6F0;--muted:#8B8BA7;--card:#16162A;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
     body{background:var(--bg);color:var(--white);font-family:'Inter',sans-serif;overflow-x:hidden;}
 
-    /* NAV */
     nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(10,10,15,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(124,58,237,.2);}
     .nav-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.4rem;color:var(--cyan);text-decoration:none;}
     .nav-logo span{color:var(--vl);}
     .nav-links{display:flex;gap:2.5rem;list-style:none;}
     .nav-links a{color:var(--muted);text-decoration:none;font-size:.875rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;transition:color .2s;}
     .nav-links a:hover{color:var(--cyan);}
-    .nav-cta{background:var(--violet);color:#fff!important;padding:.5rem 1.2rem;border-radius:4px;transition:background .2s!important;}
+    .nav-cta{background:var(--violet);color:#fff!important;padding:.5rem 1.2rem;border-radius:4px;}
     .nav-cta:hover{background:var(--vl)!important;}
 
-    /* HERO */
     #hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;overflow:hidden;}
     .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(124,58,237,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,.08) 1px,transparent 1px);background-size:60px 60px;animation:gridPulse 8s ease-in-out infinite;}
     @keyframes gridPulse{0%,100%{opacity:.4;}50%{opacity:1;}}
@@ -34,8 +32,8 @@
     .hero-content{position:relative;z-index:2;max-width:860px;}
     .hero-eyebrow{font-family:'Orbitron',monospace;font-size:.75rem;letter-spacing:.3em;color:var(--cyan);text-transform:uppercase;margin-bottom:1.5rem;}
     .hero-title{font-family:'Orbitron',monospace;font-size:clamp(2.5rem,7vw,5.5rem);font-weight:900;line-height:1.05;margin-bottom:1.5rem;}
-    .hero-title .line-violet{color:var(--vl);}
-    .hero-title .line-cyan{color:var(--cyan);}
+    .hero-title .lv{color:var(--vl);}
+    .hero-title .lc{color:var(--cyan);}
     .hero-sub{font-size:1.15rem;color:var(--muted);line-height:1.7;max-width:560px;margin:0 auto 2.5rem;}
     .hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
     .btn-primary{background:var(--violet);color:#fff;border:none;cursor:pointer;padding:.9rem 2.2rem;border-radius:4px;font-family:'Orbitron',monospace;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:background .2s,transform .15s;}
@@ -47,14 +45,12 @@
     .stat-num{font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;color:var(--cyan);}
     .stat-label{font-size:.8rem;color:var(--muted);letter-spacing:.05em;margin-top:.3rem;}
 
-    /* SECTIONS */
     section{padding:7rem 4rem;}
     .section-header{text-align:center;margin-bottom:4rem;}
     .section-eyebrow{font-family:'Orbitron',monospace;font-size:.7rem;letter-spacing:.3em;color:var(--vl);text-transform:uppercase;margin-bottom:1rem;}
     .section-title{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.15;}
     .section-sep{width:60px;height:3px;background:linear-gradient(90deg,var(--violet),var(--cyan));margin:1.2rem auto 0;border-radius:2px;}
 
-    /* SERVICES */
     #services{background:var(--surface);}
     .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto;}
     .service-card{background:var(--card);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:2rem;transition:border-color .25s,transform .2s,box-shadow .2s;}
@@ -64,12 +60,11 @@
     .service-card p{font-size:.9rem;color:var(--muted);line-height:1.65;}
     .service-tag{display:inline-block;margin-top:1rem;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);border:1px solid rgba(0,245,255,.3);padding:.25rem .6rem;border-radius:3px;}
 
-    /* PROJETS */
     #projets{background:var(--bg);}
     .projets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;max-width:1100px;margin:0 auto;}
     .projet-card{background:var(--card);border:1px solid rgba(124,58,237,.15);border-radius:10px;overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s;}
     .projet-card:hover{transform:translateY(-6px);border-color:var(--vl);box-shadow:0 20px 60px rgba(124,58,237,.15);}
-    .projet-thumb{height:180px;display:flex;align-items:center;justify-content:center;font-size:4rem;background:linear-gradient(135deg,#1a0533,#3b0764);}
+    .projet-thumb{height:180px;display:flex;align-items:center;justify-content:center;font-size:4rem;}
     .projet-info{padding:1.5rem;}
     .projet-cat{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--vl);margin-bottom:.5rem;}
     .projet-info h3{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;margin-bottom:.6rem;}
@@ -77,17 +72,14 @@
     .projet-link{display:inline-flex;align-items:center;gap:.4rem;margin-top:1rem;color:var(--cyan);font-size:.8rem;font-weight:600;text-decoration:none;transition:gap .2s;}
     .projet-link:hover{gap:.7rem;}
 
-    /* CONTACT SECTION */
     #contact-section{background:var(--surface);}
     .contact-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;max-width:900px;margin:0 auto 3rem;}
     .contact-card{background:var(--card);border:1px solid rgba(124,58,237,.2);border-radius:8px;padding:1.5rem;text-align:center;}
     .contact-card .cc-icon{font-size:1.8rem;margin-bottom:.8rem;}
     .contact-card .cc-label{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
     .contact-card a{color:var(--cyan);font-size:.9rem;text-decoration:none;word-break:break-all;}
-    .contact-card a:hover{text-decoration:underline;}
     .contact-card .cc-val{color:var(--white);font-size:.9rem;}
 
-    /* COMMANDE */
     #commande{background:var(--bg);}
     .commande-wrapper{max-width:640px;margin:0 auto;background:var(--card);border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:3rem;}
     .form-group{margin-bottom:1.4rem;}
@@ -103,11 +95,9 @@
     .form-success h3{font-family:'Orbitron',monospace;margin-bottom:.5rem;}
     .form-success p{color:var(--muted);}
 
-    /* MESSAGE */
     #message-section{background:var(--surface);}
     .message-wrapper{max-width:540px;margin:0 auto;background:var(--card);border:1px solid rgba(0,245,255,.2);border-radius:12px;padding:3rem;}
 
-    /* FOOTER */
     footer{background:var(--surface);border-top:1px solid rgba(124,58,237,.15);padding:2.5rem 4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
     .footer-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.1rem;color:var(--cyan);}
     .footer-logo span{color:var(--vl);}
@@ -118,9 +108,13 @@
     .footer-socials a{color:var(--muted);font-size:.8rem;text-decoration:none;transition:color .2s;}
     .footer-socials a:hover{color:var(--cyan);}
 
+    .loading-overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;transition:opacity .4s;}
+    .loading-overlay.hidden{opacity:0;pointer-events:none;}
+    .loading-text{font-family:'Orbitron',monospace;color:var(--cyan);font-size:1rem;letter-spacing:.2em;animation:pulse 1.2s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+
     @media(max-width:768px){
-      nav{padding:1rem 1.5rem;}
-      .nav-links{display:none;}
+      nav{padding:1rem 1.5rem;}.nav-links{display:none;}
       section{padding:5rem 1.5rem;}
       footer{padding:2rem 1.5rem;flex-direction:column;text-align:center;}
       .form-row{grid-template-columns:1fr;}
@@ -130,8 +124,12 @@
 </head>
 <body>
 
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-text">CHARGEMENT...</div>
+</div>
+
 <nav>
-  <a class="nav-logo" href="#hero" id="nav-logo-text">SAMOA<span>.DEV</span></a>
+  <a class="nav-logo" href="#hero">SAMOA<span>.DEV</span></a>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
     <li><a href="#projets">Projets</a></li>
@@ -140,7 +138,6 @@
   </ul>
 </nav>
 
-<!-- HERO -->
 <section id="hero">
   <div class="hero-grid"></div>
   <div class="scanlines"></div>
@@ -148,11 +145,11 @@
   <div class="hero-content">
     <p class="hero-eyebrow" id="hero-eyebrow">// Moteur · Narration · Pixel</p>
     <h1 class="hero-title">
-      <span class="line-violet" id="hero-line1">Je construis</span><br>
+      <span class="lv" id="hero-line1">Je construis</span><br>
       <span id="hero-line2">des mondes</span><br>
-      <span class="line-cyan" id="hero-line3">jouables.</span>
+      <span class="lc" id="hero-line3">jouables.</span>
     </h1>
-    <p class="hero-sub" id="hero-sub">Moteurs vidéo sur mesure, expériences narratives immersives et storytelling visuel — chaque projet est une nouvelle réalité à explorer.</p>
+    <p class="hero-sub" id="hero-sub">Moteurs vidéo sur mesure, expériences narratives immersives et storytelling visuel.</p>
     <div class="hero-actions">
       <a href="#projets" class="btn-primary">Voir les projets</a>
       <a href="#commande" class="btn-outline">Passer commande</a>
@@ -161,7 +158,6 @@
   </div>
 </section>
 
-<!-- SERVICES -->
 <section id="services">
   <div class="section-header">
     <p class="section-eyebrow">// Ce que je crée</p>
@@ -171,7 +167,6 @@
   <div class="services-grid" id="services-grid"></div>
 </section>
 
-<!-- PROJETS -->
 <section id="projets">
   <div class="section-header">
     <p class="section-eyebrow">// Réalisations</p>
@@ -181,7 +176,6 @@
   <div class="projets-grid" id="projets-grid"></div>
 </section>
 
-<!-- CONTACT INFO -->
 <section id="contact-section">
   <div class="section-header">
     <p class="section-eyebrow">// Me retrouver</p>
@@ -191,7 +185,6 @@
   <div class="contact-cards" id="contact-cards"></div>
 </section>
 
-<!-- COMMANDE -->
 <section id="commande">
   <div class="section-header">
     <p class="section-eyebrow">// Démarrer un projet</p>
@@ -222,18 +215,15 @@
           <option>5 000 – 15 000 €</option><option>15 000 € +</option><option>À définir ensemble</option>
         </select>
       </div>
-      <div class="form-group"><label>Description du projet *</label><textarea id="cmd-desc" placeholder="Décrivez votre vision…"></textarea></div>
+      <div class="form-group"><label>Description *</label><textarea id="cmd-desc" placeholder="Décrivez votre vision…"></textarea></div>
       <button class="btn-submit" onclick="envoyerCommande()">⚡ Soumettre la commande</button>
     </div>
     <div class="form-success" id="commandeSuccess">
-      <div class="icon">✅</div>
-      <h3>Commande reçue !</h3>
-      <p>Je reviens vers vous sous 48h.</p>
+      <div class="icon">✅</div><h3>Commande reçue !</h3><p>Je reviens vers vous sous 48h.</p>
     </div>
   </div>
 </section>
 
-<!-- MESSAGE -->
 <section id="message-section">
   <div class="section-header">
     <p class="section-eyebrow">// Entrer en contact</p>
@@ -248,70 +238,140 @@
       <button class="btn-submit" onclick="envoyerContact()">📡 Envoyer</button>
     </div>
     <div class="form-success" id="contactSuccess">
-      <div class="icon">📨</div>
-      <h3>Message envoyé !</h3>
-      <p>Merci ! Je vous réponds rapidement.</p>
+      <div class="icon">📨</div><h3>Message envoyé !</h3><p>Merci !</p>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="footer-logo" id="footer-logo">SAMOA<span>.DEV</span></div>
-  <p class="footer-copy" id="footer-copy">© 2026 Samoa — Tous droits réservés</p>
+  <div class="footer-logo">SAMOA<span>.DEV</span></div>
+  <p class="footer-copy">© 2026 Samoa — Tous droits réservés</p>
   <div class="footer-socials" id="footer-socials"></div>
   <a class="footer-admin" href="dashboard.html">_admin</a>
 </footer>
 
 <script>
-/* ── DEFAULTS ── */
+/* ══ CONFIG JSONBIN ══ */
+const API_KEY  = '$2a$10$/hSgMigRmfaEnJC.qp7Ay.LDxELt2gf2jhVXAdtwUrfeTjVL5K8Pi';
+const BASE_URL = 'https://api.jsonbin.io/v3/b';
+const BINS = {
+  content : null,   // sera créé/récupéré au chargement
+  commandes: null,
+  messages : null,
+  visits   : null
+};
+
+/* ══ DEFAULTS ══ */
 const DEFAULTS = {
-  hero: {
+  hero:{
     eyebrow:'// Moteur · Narration · Pixel',
     line1:'Je construis', line2:'des mondes', line3:'jouables.',
     sub:'Moteurs vidéo sur mesure, expériences narratives immersives et storytelling visuel — chaque projet est une nouvelle réalité à explorer.',
-    stats:[
-      {num:'24+', label:'Projets livrés'},
-      {num:'8', label:'Moteurs créés'},
-      {num:'100%', label:'Sur mesure'}
-    ]
+    stats:[{num:'24+',label:'Projets livrés'},{num:'8',label:'Moteurs créés'},{num:'100%',label:'Sur mesure'}]
   },
   services:[
-    {icon:'⚙️', titre:'Moteurs Vidéo Custom', desc:'Développement de moteurs de rendu et d\'animation sur mesure, optimisés pour les performances.', tag:'Engine Dev'},
-    {icon:'🎮', titre:'Expériences Gaming', desc:'Conception et développement d\'expériences interactives et jeux vidéo avec mécanique narrative.', tag:'Game Design'},
-    {icon:'📖', titre:'Storytelling Visuel', desc:'Narration transmedia — scénarios, visuels cinématiques et direction artistique.', tag:'Narrative'},
-    {icon:'🎬', titre:'Cinématiques & Trailers', desc:'Production de trailers de jeux et séquences narratives pour révéler vos univers.', tag:'Video'},
-    {icon:'🌐', titre:'Intégration WebGL', desc:'Expériences interactives 3D dans le navigateur — portfolios immersifs, démos produits.', tag:'WebGL'},
-    {icon:'🧠', titre:'Conseil & Direction', desc:'Accompagnement créatif et technique pour studios indépendants ou équipes ambitieuses.', tag:'Consulting'}
+    {icon:'⚙️',titre:'Moteurs Vidéo Custom',desc:'Développement de moteurs de rendu et d\'animation sur mesure.',tag:'Engine Dev'},
+    {icon:'🎮',titre:'Expériences Gaming',desc:'Conception et développement d\'expériences interactives.',tag:'Game Design'},
+    {icon:'📖',titre:'Storytelling Visuel',desc:'Narration transmedia — scénarios, visuels cinématiques.',tag:'Narrative'},
+    {icon:'🎬',titre:'Cinématiques & Trailers',desc:'Production de trailers de jeux et séquences narratives.',tag:'Video'},
+    {icon:'🌐',titre:'Intégration WebGL',desc:'Expériences interactives 3D dans le navigateur.',tag:'WebGL'},
+    {icon:'🧠',titre:'Conseil & Direction',desc:'Accompagnement créatif et technique.',tag:'Consulting'}
   ],
   projets:[
-    {emoji:'🌌', bg:'linear-gradient(135deg,#1a0533,#3b0764)', cat:'Moteur Vidéo', titre:'Nebula Engine v2', desc:'Moteur de rendu procédural pour la génération de galaxies interactives en temps réel.', lien:''},
-    {emoji:'🐉', bg:'linear-gradient(135deg,#001a1a,#003333)', cat:'Gaming · Narrative', titre:'Echos of Arath', desc:'RPG narratif avec système de mémoire dynamique — les choix du joueur façonnent l\'histoire.', lien:''},
-    {emoji:'🤖', bg:'linear-gradient(135deg,#0f0f2e,#1a1a4f)', cat:'Storytelling · Cinématique', titre:'SYNTH — Origine', desc:'Série de cinématiques in-engine narrant la genèse d\'une IA consciente.', lien:''},
-    {emoji:'🔥', bg:'linear-gradient(135deg,#1a0a00,#3d1f00)', cat:'WebGL · Interactif', titre:'Forge Interactive', desc:'Démo produit 3D immersive — exploration libre d\'un atelier en temps réel.', lien:''}
+    {emoji:'🌌',bg:'linear-gradient(135deg,#1a0533,#3b0764)',cat:'Moteur Vidéo',titre:'Nebula Engine v2',desc:'Moteur de rendu procédural pour galaxies interactives.',lien:''},
+    {emoji:'🐉',bg:'linear-gradient(135deg,#001a1a,#003333)',cat:'Gaming · Narrative',titre:'Echos of Arath',desc:'RPG narratif avec système de mémoire dynamique.',lien:''},
+    {emoji:'🤖',bg:'linear-gradient(135deg,#0f0f2e,#1a1a4f)',cat:'Storytelling',titre:'SYNTH — Origine',desc:'Cinématiques in-engine narrant la genèse d\'une IA.',lien:''},
+    {emoji:'🔥',bg:'linear-gradient(135deg,#1a0a00,#3d1f00)',cat:'WebGL',titre:'Forge Interactive',desc:'Démo produit 3D immersive en temps réel.',lien:''}
   ],
   contacts:[
-    {icon:'📧', label:'Email', valeur:'samoa@email.com', lien:'mailto:samoa@email.com'},
-    {icon:'▶️', label:'YouTube', valeur:'youtube.com/@samoa', lien:'https://youtube.com/@samoa'},
-    {icon:'🎮', label:'Discord', valeur:'Samoa#0000', lien:''},
-    {icon:'📸', label:'Instagram', valeur:'@samoa', lien:'https://instagram.com/samoa'}
+    {icon:'📧',label:'Email',valeur:'samoa@email.com',lien:'mailto:samoa@email.com'},
+    {icon:'▶️',label:'YouTube',valeur:'youtube.com/@samoa',lien:'https://youtube.com/@samoa'},
+    {icon:'🎮',label:'Discord',valeur:'Samoa#0000',lien:''},
+    {icon:'📸',label:'Instagram',valeur:'@samoa',lien:'https://instagram.com/samoa'}
   ]
 };
 
-function getDB(k){ try{return JSON.parse(localStorage.getItem(k));}catch{return null;} }
-function trackVisit(){
-  const v=getDB('visits')||[];
-  v.unshift({id:Date.now(),date:new Date().toISOString(),page:'portfolio'});
-  localStorage.setItem('visits',JSON.stringify(v.slice(0,500)));
+/* ══ JSONBIN HELPERS ══ */
+const headers = {
+  'Content-Type':'application/json',
+  'X-Master-Key': API_KEY,
+  'X-Bin-Private':'false'
+};
+
+async function createBin(name, data){
+  const r = await fetch(BASE_URL, {
+    method:'POST',
+    headers:{...headers,'X-Bin-Name':name},
+    body: JSON.stringify(data)
+  });
+  const j = await r.json();
+  return j.metadata?.id || null;
 }
-trackVisit();
 
-function render(){
-  const hero     = getDB('content_hero')     || DEFAULTS.hero;
-  const services = getDB('content_services') || DEFAULTS.services;
-  const projets  = getDB('content_projets')  || DEFAULTS.projets;
-  const contacts = getDB('content_contacts') || DEFAULTS.contacts;
+async function getBin(id){
+  const r = await fetch(`${BASE_URL}/${id}/latest`, {headers});
+  const j = await r.json();
+  return j.record || null;
+}
 
-  // Hero
+async function updateBin(id, data){
+  await fetch(`${BASE_URL}/${id}`, {
+    method:'PUT',
+    headers,
+    body: JSON.stringify(data)
+  });
+}
+
+/* ══ BIN IDS stored in localStorage (device-agnostic via same key name) ══ */
+function getBinId(name){ return localStorage.getItem('binid_'+name); }
+function setBinId(name, id){ localStorage.setItem('binid_'+name, id); }
+
+async function ensureBin(name, defaultData){
+  let id = getBinId(name);
+  if(!id){
+    id = await createBin('samoa_'+name, defaultData);
+    if(id) setBinId(name, id);
+  }
+  return id;
+}
+
+/* ══ INIT ══ */
+async function init(){
+  // Charger le contenu (hero, services, projets, contacts)
+  const contentId = await ensureBin('content', DEFAULTS);
+  let content = DEFAULTS;
+  if(contentId){
+    try{ content = await getBin(contentId) || DEFAULTS; }catch(e){}
+  }
+  renderContent(content);
+
+  // Tracker la visite
+  trackVisit();
+
+  document.getElementById('loadingOverlay').classList.add('hidden');
+}
+
+async function trackVisit(){
+  const id = await ensureBin('visits', {visits:[]});
+  if(!id) return;
+  try{
+    const data = await getBin(id) || {visits:[]};
+    data.visits = data.visits || [];
+    data.visits.unshift({date: new Date().toISOString(), page:'portfolio'});
+    if(data.visits.length > 500) data.visits = data.visits.slice(0,500);
+    await updateBin(id, data);
+  }catch(e){}
+}
+
+/* ══ RENDER ══ */
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderContent(c){
+  const hero     = c.hero     || DEFAULTS.hero;
+  const services = c.services || DEFAULTS.services;
+  const projets  = c.projets  || DEFAULTS.projets;
+  const contacts = c.contacts || DEFAULTS.contacts;
+
   document.getElementById('hero-eyebrow').textContent = hero.eyebrow;
   document.getElementById('hero-line1').textContent   = hero.line1;
   document.getElementById('hero-line2').textContent   = hero.line2;
@@ -321,7 +381,6 @@ function render(){
     `<div class="stat"><div class="stat-num">${esc(s.num)}</div><div class="stat-label">${esc(s.label)}</div></div>`
   ).join('');
 
-  // Services
   document.getElementById('services-grid').innerHTML = services.map(s=>`
     <div class="service-card">
       <span class="service-icon">${esc(s.icon)}</span>
@@ -330,7 +389,6 @@ function render(){
       <span class="service-tag">${esc(s.tag)}</span>
     </div>`).join('');
 
-  // Projets
   document.getElementById('projets-grid').innerHTML = projets.map(p=>`
     <div class="projet-card">
       <div class="projet-thumb" style="background:${p.bg||'linear-gradient(135deg,#1a0533,#3b0764)'}">
@@ -340,42 +398,25 @@ function render(){
         <p class="projet-cat">${esc(p.cat)}</p>
         <h3>${esc(p.titre)}</h3>
         <p>${esc(p.desc)}</p>
-        ${p.lien ? `<a href="${esc(p.lien)}" class="projet-link" target="_blank" rel="noopener">Voir le projet →</a>` : ''}
+        ${p.lien?`<a href="${esc(p.lien)}" class="projet-link" target="_blank" rel="noopener">Voir le projet →</a>`:''}
       </div>
     </div>`).join('');
 
-  // Contacts
   document.getElementById('contact-cards').innerHTML = contacts.map(c=>`
     <div class="contact-card">
       <div class="cc-icon">${esc(c.icon)}</div>
       <div class="cc-label">${esc(c.label)}</div>
-      ${c.lien ? `<a href="${esc(c.lien)}" target="_blank" rel="noopener">${esc(c.valeur)}</a>` : `<div class="cc-val">${esc(c.valeur)}</div>`}
+      ${c.lien?`<a href="${esc(c.lien)}" target="_blank" rel="noopener">${esc(c.valeur)}</a>`:`<div class="cc-val">${esc(c.valeur)}</div>`}
     </div>`).join('');
 
-  // Footer socials
   document.getElementById('footer-socials').innerHTML = contacts
     .filter(c=>c.lien)
     .map(c=>`<a href="${esc(c.lien)}" target="_blank" rel="noopener">${esc(c.icon)} ${esc(c.label)}</a>`)
     .join('');
 }
 
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
-// Écouter les changements en temps réel (depuis dashboard dans même navigateur)
-window.addEventListener('storage', e => {
-  if(e.key && e.key.startsWith('content_')) render();
-});
-
-render();
-
-/* FORMS */
-function pushDB(key,obj){
-  const arr=getDB(key)||[];
-  arr.unshift({...obj,id:Date.now(),date:new Date().toISOString()});
-  localStorage.setItem(key,JSON.stringify(arr));
-}
-
-function envoyerCommande(){
+/* ══ FORMULAIRES ══ */
+async function envoyerCommande(){
   const prenom=document.getElementById('cmd-prenom').value.trim();
   const nom=document.getElementById('cmd-nom').value.trim();
   const email=document.getElementById('cmd-email').value.trim();
@@ -383,20 +424,48 @@ function envoyerCommande(){
   const budget=document.getElementById('cmd-budget').value;
   const desc=document.getElementById('cmd-desc').value.trim();
   if(!prenom||!nom||!email||!type||!desc){alert('Merci de remplir tous les champs obligatoires (*).'); return;}
-  pushDB('commandes',{prenom,nom,email,type,budget,desc,statut:'Nouveau'});
-  document.getElementById('commandeForm').style.display='none';
-  document.getElementById('commandeSuccess').style.display='block';
+
+  const btn=document.querySelector('#commandeForm .btn-submit');
+  btn.textContent='Envoi…'; btn.disabled=true;
+
+  try{
+    const id = await ensureBin('commandes', {commandes:[]});
+    const data = await getBin(id) || {commandes:[]};
+    data.commandes = data.commandes || [];
+    data.commandes.unshift({prenom,nom,email,type,budget,desc,statut:'Nouveau',date:new Date().toISOString(),id:Date.now()});
+    await updateBin(id, data);
+    document.getElementById('commandeForm').style.display='none';
+    document.getElementById('commandeSuccess').style.display='block';
+  }catch(e){
+    alert('Erreur lors de l\'envoi. Réessayez.');
+    btn.textContent='⚡ Soumettre la commande'; btn.disabled=false;
+  }
 }
 
-function envoyerContact(){
+async function envoyerContact(){
   const nom=document.getElementById('ct-nom').value.trim();
   const email=document.getElementById('ct-email').value.trim();
   const msg=document.getElementById('ct-msg').value.trim();
   if(!nom||!email||!msg){alert('Merci de remplir tous les champs obligatoires (*).'); return;}
-  pushDB('messages',{nom,email,msg,lu:false});
-  document.getElementById('contactForm').style.display='none';
-  document.getElementById('contactSuccess').style.display='block';
+
+  const btn=document.querySelector('#contactForm .btn-submit');
+  btn.textContent='Envoi…'; btn.disabled=true;
+
+  try{
+    const id = await ensureBin('messages', {messages:[]});
+    const data = await getBin(id) || {messages:[]};
+    data.messages = data.messages || [];
+    data.messages.unshift({nom,email,msg,lu:false,date:new Date().toISOString(),id:Date.now()});
+    await updateBin(id, data);
+    document.getElementById('contactForm').style.display='none';
+    document.getElementById('contactSuccess').style.display='block';
+  }catch(e){
+    alert('Erreur lors de l\'envoi. Réessayez.');
+    btn.textContent='📡 Envoyer'; btn.disabled=false;
+  }
 }
+
+init();
 </script>
 </body>
 </html>
